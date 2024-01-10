@@ -1,1 +1,10 @@
 object detection using google colab, jupyter notebook , roboflow , yolo 
+
+
+create a folder , give name 
+
+*add images with .jpg extention right click on 3 dots copy the path  paste  THE PATH IN IMAGE (IN CODE).
+
+SAME FOR OUTPUTFILE 
+
+THE OUTPUT:- THE OBJECT WILL DETECTED WITH ACCURACY .
