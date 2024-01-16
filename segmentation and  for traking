@@ -1,4 +1,4 @@
-from IPython.display import Image, display
+from IPython.display import display
 import cv2
 from ultralytics import YOLO
 from ultralytics.utils.plotting import Annotator, colors
@@ -10,7 +10,7 @@ model = YOLO("yolov8n-seg.pt")   # segmentation model
 cap = cv2.VideoCapture("/content/git/sample segmentation video.mp4")
 w, h, fps = (int(cap.get(x)) for x in (cv2.CAP_PROP_FRAME_WIDTH, cv2.CAP_PROP_FRAME_HEIGHT, cv2.CAP_PROP_FPS))
 
-out = cv2.VideoWriter('instance-segmentation-object-tracking.avi', cv2.VideoWriter_fourcc(*'MJPG'), fps, (w, h))
+out = cv2.VideoWriter('instance-segmentation-object-tracking.mp4', cv2.VideoWriter_fourcc(*'mp4v'), fps, (w, h))
 
 frame_index = 0  # Counter for saving frames as images
 
@@ -40,13 +40,8 @@ while True:
     cv2.imwrite(img_path, im0)  # Use im0 directly
     frame_index += 1
 
-# Display the saved frames as images in Colab
-for i in range(frame_index):
-    img_path = f'/content/frame_{i}.png'
-    img = Image(filename=img_path)
-    display(img)
-
 # Release VideoWriter and VideoCapture
 out.release()
 cap.release()
 cv2.destroyAllWindows()
+
