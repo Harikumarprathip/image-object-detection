@@ -1,0 +1,38 @@
+import cv2
+import matplotlib.pyplot as plt
+from ultralytics import YOLO
+from ultralytics.utils.plotting import Annotator, colors
+
+# Ensure Matplotlib displays inline
+%matplotlib inline
+
+model = YOLO("yolov8n-seg.pt")  # segmentation model
+names = model.model.names
+cap = cv2.VideoCapture("/content/cam/sample segmentation video.mp4")
+w, h, fps = (int(cap.get(x)) for x in (cv2.CAP_PROP_FRAME_WIDTH, cv2.CAP_PROP_FRAME_HEIGHT, cv2.CAP_PROP_FPS))
+
+# Change the VideoWriter format to MP4
+out = cv2.VideoWriter('instance-segmentation.mp4', cv2.VideoWriter_fourcc(*'mp4v'), fps, (w, h))
+
+while True:
+    ret, im0 = cap.read()
+    if not ret:
+        print("Video frame is empty or video processing has been successfully completed.")
+        break
+
+    results = model.predict(im0)
+    annotator = Annotator(im0, line_width=2)
+
+    if results[0].masks is not None:
+        clss = results[0].boxes.cls.cpu().tolist()
+        masks = results[0].masks.xy
+        for mask, cls in zip(masks, clss):
+            annotator.seg_bbox(mask=mask,
+                               mask_color=colors(int(cls), True),
+                               det_label=names[int(cls)])
+
+    # Display the annotated image
+    plt.imshow(annotator.result())
+    plt.show()
+
+    # Write the frame with annotations to the output
